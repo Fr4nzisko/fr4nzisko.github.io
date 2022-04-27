@@ -1,0 +1,694 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.23.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>OpenAdmin - HackTheBox - Fr4nzisko</title>
+<meta name="description" content="Esta máquina es de dificultad fácil, me gusto más la intrusión al aprovecharme de un panel de control vulnerable llamado OpenNetAdmin, use un exploit que te explotaba la vulnerabilidad del panel y te otorgaba ejecución remota de código arbitrario. Esta vez la escalada fue bastante sencilla de completar, al hacer sudo -l me permitía como cualquier usuario ejecutar el binario de nano a un archivo llamado priv.">
+
+
+  <meta name="author" content="Fr4nzisko">
+  
+  <meta property="article:author" content="Fr4nzisko">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Fr4nzisko">
+<meta property="og:title" content="OpenAdmin - HackTheBox">
+<meta property="og:url" content="http://localhost:4000/hackthebox/OpenAdmin/">
+
+
+  <meta property="og:description" content="Esta máquina es de dificultad fácil, me gusto más la intrusión al aprovecharme de un panel de control vulnerable llamado OpenNetAdmin, use un exploit que te explotaba la vulnerabilidad del panel y te otorgaba ejecución remota de código arbitrario. Esta vez la escalada fue bastante sencilla de completar, al hacer sudo -l me permitía como cualquier usuario ejecutar el binario de nano a un archivo llamado priv.">
+
+
+
+  <meta property="og:image" content="https://user-images.githubusercontent.com/69093629/125315417-67da5380-e337-11eb-844d-ab46b6686a1a.png">
+
+
+
+
+
+  <meta property="article:published_time" content="2021-07-12T00:00:00-04:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/hackthebox/OpenAdmin/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Fr4nzisko",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+  <meta name="google-site-verification" content="mV7b_uBVZWzlYpLtwQoiB3Eb7iioF8rEc2Y-GldRYB8" />
+
+
+  <meta name="msvalidate.01" content="0FC3FD70512616B052E755A56F8952D">
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Fr4nzisko Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+    <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>OpenAdmin - HackTheBox | Fr4nzisko</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="OpenAdmin - HackTheBox" />
+<meta name="author" content="Fr4nzisko" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Esta máquina es de dificultad fácil, me gusto más la intrusión al aprovecharme de un panel de control vulnerable llamado OpenNetAdmin, use un exploit que te explotaba la vulnerabilidad del panel y te otorgaba ejecución remota de código arbitrario. Esta vez la escalada fue bastante sencilla de completar, al hacer sudo -l me permitía como cualquier usuario ejecutar el binario de nano a un archivo llamado priv." />
+<meta property="og:description" content="Esta máquina es de dificultad fácil, me gusto más la intrusión al aprovecharme de un panel de control vulnerable llamado OpenNetAdmin, use un exploit que te explotaba la vulnerabilidad del panel y te otorgaba ejecución remota de código arbitrario. Esta vez la escalada fue bastante sencilla de completar, al hacer sudo -l me permitía como cualquier usuario ejecutar el binario de nano a un archivo llamado priv." />
+<link rel="canonical" href="http://localhost:4000/hackthebox/OpenAdmin/" />
+<meta property="og:url" content="http://localhost:4000/hackthebox/OpenAdmin/" />
+<meta property="og:site_name" content="Fr4nzisko" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-07-12T00:00:00-04:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="OpenAdmin - HackTheBox" />
+<meta name="twitter:site" content="@" />
+<meta name="twitter:creator" content="@Fr4nzisko" />
+<meta name="google-site-verification" content="mV7b_uBVZWzlYpLtwQoiB3Eb7iioF8rEc2Y-GldRYB8" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Fr4nzisko"},"dateModified":"2021-07-12T00:00:00-04:00","datePublished":"2021-07-12T00:00:00-04:00","description":"Esta máquina es de dificultad fácil, me gusto más la intrusión al aprovecharme de un panel de control vulnerable llamado OpenNetAdmin, use un exploit que te explotaba la vulnerabilidad del panel y te otorgaba ejecución remota de código arbitrario. Esta vez la escalada fue bastante sencilla de completar, al hacer sudo -l me permitía como cualquier usuario ejecutar el binario de nano a un archivo llamado priv.","headline":"OpenAdmin - HackTheBox","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/hackthebox/OpenAdmin/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/"},"name":"Fr4nzisko"},"url":"http://localhost:4000/hackthebox/OpenAdmin/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  </head>
+
+  <body class="layout--single wide">
+    <nav class="skip-links">
+    <h2 class="screen-reader-text">Skip links</h2>
+    <ul>
+      <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+      <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+      <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+    </ul>
+  </nav>
+  
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          Fr4nzisko
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/">Home</a>
+            </li><li class="masthead__menu-item">
+              <a href="/year-archive/">Artículos</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/">Categorías</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/">Etiquetas</a>
+            </li><li class="masthead__menu-item">
+              <a href="/buscador/">Buscador</a>
+            </li><li class="masthead__menu-item">
+              <a href="/scripts/">Scripts</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+  
+    
+
+
+
+<nav class="breadcrumbs">
+  <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+    
+    
+    
+      
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="http://localhost:4000/" itemprop="item"><span itemprop="name">Home</span></a>
+          <meta itemprop="position" content="1" />
+        </li>
+        <span class="sep">/</span>
+      
+      
+        
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="/categories/#hackthebox" itemprop="item"><span itemprop="name">Hackthebox</span></a>
+          <meta itemprop="position" content="2" />
+        </li>
+        <span class="sep">/</span>
+      
+    
+      
+      
+        <li class="current">OpenAdmin - HackTheBox</li>
+      
+    
+  </ol>
+</nav>
+
+  
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="https://avatars.githubusercontent.com/u/59784204?v=4" alt="Fr4nzisko" itemprop="image" style="border: #00485c;">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Fr4nzisko</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>Cybersecurity Engineer (in process)/ Cybersecurity Technician / Telecommunications Technician /  <strong>Red Team</strong> 🔴</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <li><a href="https://github.com/Fr4nzisko" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+            <li><a href="https://app.hackthebox.com/profile/174531" rel="nofollow noopener noreferrer"><i class="fas fa-cube" aria-hidden="true"></i><span class="label">HackTheBox</span></a></li>
+          
+        
+          
+            <li><a href="https://www.linkedin.com/in/jose-francisco-flores-/" rel="nofollow noopener noreferrer"><i class="fab fa-linkedin-in" aria-hidden="true"></i><span class="label">Linkedin</span></a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="OpenAdmin - HackTheBox">
+    <meta itemprop="description" content="Esta máquina es de dificultad fácil, me gusto más la intrusión al aprovecharme de un panel de control vulnerable llamado OpenNetAdmin, use un exploit que te explotaba la vulnerabilidad del panel y te otorgaba ejecución remota de código arbitrario. Esta vez la escalada fue bastante sencilla de completar, al hacer sudo -l me permitía como cualquier usuario ejecutar el binario de nano a un archivo llamado priv.">
+    <meta itemprop="datePublished" content="2021-07-12T00:00:00-04:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">OpenAdmin - HackTheBox
+</h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true">&nbsp;</i>
+        
+        <time datetime="2021-07-12T00:00:00-04:00">July 12, 2021</time>
+      </span>
+    
+
+      
+  </p>
+
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p align="center">
+<img src="https://user-images.githubusercontent.com/69093629/125315417-67da5380-e337-11eb-844d-ab46b6686a1a.png" />
+</p>
+
+<p>Comencé haciendo un escaneo con <code class="language-plaintext highlighter-rouge">Nmap</code> para detectar puertos abiertos.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─[Fr4nzisko@RedTeam]─[/home/Fr4nzisko/Desktop]
+└──╼ nmap <span class="nt">-sS</span> <span class="nt">--min-rate</span><span class="o">=</span>5000 <span class="nt">-p-</span> <span class="nt">-v</span> <span class="nt">-Pn</span> <span class="nt">-n</span> 10.10.10.171 <span class="nt">-oG</span> allports 
+Starting Nmap 7.80 <span class="o">(</span> https://nmap.org <span class="o">)</span> at 2021-07-11 18:33 CEST
+Initiating SYN Stealth Scan at 18:33
+Scanning 10.10.10.171 <span class="o">[</span>65535 ports]
+Discovered open port 80/tcp on 10.10.10.171
+Discovered open port 22/tcp on 10.10.10.171
+Increasing send delay <span class="k">for </span>10.10.10.171 from 0 to 5 due to max_successful_tryno increase to 4
+Completed SYN Stealth Scan at 18:33, 13.67s elapsed <span class="o">(</span>65535 total ports<span class="o">)</span>
+Nmap scan report <span class="k">for </span>10.10.10.171
+Host is up <span class="o">(</span>0.049s latency<span class="o">)</span><span class="nb">.</span>
+Not shown: 65533 closed ports
+PORT   STATE SERVICE
+22/tcp open  ssh
+80/tcp open  http
+
+Read data files from: /usr/bin/../share/nmap
+Nmap <span class="k">done</span>: 1 IP address <span class="o">(</span>1 host up<span class="o">)</span> scanned <span class="k">in </span>13.81 seconds
+           Raw packets sent: 69669 <span class="o">(</span>3.065MB<span class="o">)</span> | Rcvd: 69574 <span class="o">(</span>2.785MB<span class="o">)</span>
+</code></pre></div></div>
+
+<p>Luego efectúe otro escaneo de la versión y servicios que estaban corriendo en cada puerto encontrado.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─[Fr4nzisko@RedTeam]─[/home/Fr4nzisko/Desktop]
+└──╼ nmap <span class="nt">-sC</span> <span class="nt">-sV</span> <span class="nt">-p22</span>,80 10.10.10.171 <span class="nt">-oN</span> targeted       
+Starting Nmap 7.80 <span class="o">(</span> https://nmap.org <span class="o">)</span> at 2021-07-11 18:33 CEST
+Nmap scan report <span class="k">for </span>10.10.10.171
+Host is up <span class="o">(</span>0.042s latency<span class="o">)</span><span class="nb">.</span>
+
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 <span class="o">(</span>Ubuntu Linux<span class="p">;</span> protocol 2.0<span class="o">)</span>
+| ssh-hostkey: 
+|   2048 4b:98:df:85:d1:7e:f0:3d:da:48:cd:bc:92:00:b7:54 <span class="o">(</span>RSA<span class="o">)</span>
+|   256 dc:eb:3d:c9:44:d1:18:b1:22:b4:cf:de:bd:6c:7a:54 <span class="o">(</span>ECDSA<span class="o">)</span>
+|_  256 dc:ad:ca:3c:11:31:5b:6f:e6:a4:89:34:7c:9b:e5:50 <span class="o">(</span>ED25519<span class="o">)</span>
+80/tcp open  http    Apache httpd 2.4.29 <span class="o">((</span>Ubuntu<span class="o">))</span>
+|_http-server-header: Apache/2.4.29 <span class="o">(</span>Ubuntu<span class="o">)</span>
+|_http-title: Apache2 Ubuntu Default Page: It works
+Service Info: OS: Linux<span class="p">;</span> CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ <span class="nb">.</span>
+Nmap <span class="k">done</span>: 1 IP address <span class="o">(</span>1 host up<span class="o">)</span> scanned <span class="k">in </span>10.90 seconds
+</code></pre></div></div>
+
+<p>Tenía dos puertos abiertos, uno era un servidor web y el otro <code class="language-plaintext highlighter-rouge">SSH</code>, el servidor web traía la página de apache por defecto por lo que recurrí a hacer un fuzzing para encontrar directorios, antes de utilizar <code class="language-plaintext highlighter-rouge">gobuster</code> hice uso del script <code class="language-plaintext highlighter-rouge">http-enum</code> de <code class="language-plaintext highlighter-rouge">Nmap</code> que hace uso de un diccionario mucho más pequeño.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─[Fr4nzisko@RedTeam]─[/home/Fr4nzisko/Desktop]
+└──╼ nmap <span class="nt">--script</span> http-enum 10.10.10.171          
+Starting Nmap 7.80 <span class="o">(</span> https://nmap.org <span class="o">)</span> at 2021-07-11 18:34 CEST
+Nmap scan report <span class="k">for </span>10.10.10.171
+Host is up <span class="o">(</span>0.066s latency<span class="o">)</span><span class="nb">.</span>
+Not shown: 998 closed ports
+PORT   STATE SERVICE
+22/tcp open  ssh
+80/tcp open  http
+
+Nmap <span class="k">done</span>: 1 IP address <span class="o">(</span>1 host up<span class="o">)</span> scanned <span class="k">in </span>12.02 seconds
+</code></pre></div></div>
+
+<p>Como no me encontró nada hice uso de <code class="language-plaintext highlighter-rouge">gobuster</code>, me encontró tres directorios interesantes.</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/125317595-69a51680-e339-11eb-8d20-3cf019af1004.png" alt="segunda (1)" /></p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/125317656-76296f00-e339-11eb-8873-a611a8063fd2.png" alt="cuarta (1)" /></p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/125317713-82adc780-e339-11eb-8c0b-1eaba055bac2.png" alt="tercer" /></p>
+
+<p>En la tercera página, al hacer clic en <code class="language-plaintext highlighter-rouge">login</code> te redirigía a un panel.</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/125317855-9b1de200-e339-11eb-9bcd-cd5033b0e51c.png" alt="login" /></p>
+
+<p>Probé a ver el código fuente de la página para ver como se llamaba el panel y buscar si hay algún exploit.</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/125318036-c6083600-e339-11eb-991e-7aa1a213c770.png" alt="codigofuente" /></p>
+
+<p>Se llamaba <code class="language-plaintext highlighter-rouge">OpenNetAdmin</code>, me fui a <code class="language-plaintext highlighter-rouge">seachsploit</code> y encontré un exploit que me permitía ganar ejecución de código arbitrario.</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/125318224-f4861100-e339-11eb-9697-c494d4bb9787.png" alt="opennetadmin" /></p>
+
+<p>Lo ejecuté dando los parámetros que me solicitaba y me otorgo una Shell.</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/125318381-141d3980-e33a-11eb-90ca-69ba380e259d.png" alt="ona" /></p>
+
+<p>Esta Shell no me permitía hacer un tratamiento de la <code class="language-plaintext highlighter-rouge">TTY</code>  y encima no funcionaba para volver directorios atras y permanecer, porque te ejecuta un comando y se reinicia, por lo que pensé en entablarme una reverse Shell por netcat desde la que tenía.</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/125318568-3f078d80-e33a-11eb-93ea-f7ca3e763b0a.png" alt="netcat" /></p>
+
+<p>Ahora ya me dejo hacer el tratamiento de la <code class="language-plaintext highlighter-rouge">TTY</code> y poder manejarme de una manera mucho más cómoda, era el usuario <code class="language-plaintext highlighter-rouge">www-data</code> por lo que no tenía tantos privilegios, al ir a <code class="language-plaintext highlighter-rouge">home</code> vi que habían dos usuarios, uno llamad <code class="language-plaintext highlighter-rouge">jimmy</code> y otro llamado <code class="language-plaintext highlighter-rouge">joanna</code>, entonces pensé en que me tenía que convertir en uno y luego en el otro y ya después hacer la escalada, tras una pequeña investigación encontré un archivo que tenía credenciales.</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/125319062-bb01d580-e33a-11eb-8261-303d539c856d.png" alt="credenciales (1)" /></p>
+
+<p>Probé a autenticarme en <code class="language-plaintext highlighter-rouge">SSH</code> como <code class="language-plaintext highlighter-rouge">joanna</code> y no funciono, pero cuando probé con <code class="language-plaintext highlighter-rouge">jimmy</code> i si me autentico, ahora tenía que convertirme en el usuario <code class="language-plaintext highlighter-rouge">joanna</code>, me descargue <code class="language-plaintext highlighter-rouge">linpeas.sh</code> de GitHub y me abrí un servidor por Python para transferirlo a la máquina víctima, <code class="language-plaintext highlighter-rouge">linpeas</code> me encontró que había puertos abiertos en la máquina internamente, antes de recurrir a hacer <code class="language-plaintext highlighter-rouge">port forwarding</code>para ver que tenía cada puerto, seguí investigando un poco más hasta que encontré un archivo  PHP en la ruta <code class="language-plaintext highlighter-rouge">/var/www/internal</code> que devolvia la id_rsa en texto claro, viendo lo que tenía hasta ahora, pense en que quizas ese archivo estaba corriendo por el puerto que me encontró <code class="language-plaintext highlighter-rouge">linpeas</code> el <code class="language-plaintext highlighter-rouge">52847</code>, hice un <code class="language-plaintext highlighter-rouge">curl</code> a ese archivo llamado <code class="language-plaintext highlighter-rouge">main.php</code> desde la máquina víctima y me reporto la <code class="language-plaintext highlighter-rouge">id_rsa</code> en texto claro, pero estaba encriptada, hice uso de <code class="language-plaintext highlighter-rouge">ssh2john</code> para que me devuelva hash equivalente.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─[Fr4nzisko@RedTeam]─[/home/Fr4nzisko/Desktop]
+└──╼ python /usr/share/john/ssh2john.py id_rsa 
+id_rsa:<span class="nv">$sshng$1$16$2AF25344B8391A25A9B318F3FD767D6D$1200$906d14608706c9ac6ea6342a692d9ed47a9b87044b94d72d5b61df25e68a5235991f8bac883f40b539c829550ea5937c69dfd2b4c589f8c910e4c9c030982541e51b4717013fafbe1e1db9d6331c83cca061cc7550c0f4dd98da46ec1c7f460e4a135b6f1f04bafaf66a08db17ecad8a60f25a1a095d4f94a530f9f0bf9222c6736a5f54f1ff93c6182af4ad8a407044eb16ae6cd2a10c92acffa6095441ed63215b6126ed62de25b2803233cc3ea533d56b72d15a71b291547983bf5bee5b0966710f2b4edf264f0909d6f4c0f9cb372f4bb323715d17d5ded5f83117233976199c6d86bfc28421e217ccd883e7f0eecbc6f227fdc8dff12ca87a61207803dd47ef1f2f6769773f9cb52ea7bb34f96019e00531fcc267255da737ca3af49c88f73ed5f44e2afda28287fc6926660b8fb0267557780e53b407255dcb44899115c568089254d40963c8511f3492efe938a620bde879c953e67cfb55dbbf347ddd677792544c3bb11eb0843928a34d53c3e94fed25bff744544a69bc80c4ffc87ffd4d5c3ef5fd01c8b4114cacde7681ea9556f22fc863d07a0f1e96e099e749416cca147add636eb24f5082f9224e2907e3464d71ae711cf8a3f21bd4476bf98c633ff1bbebffb42d24544298c918a7b14c501d2c43534b8428d34d500537f0197e75a4279bbe4e8d2acee3c1586a59b28671e406c0e178b4d29aaa7a478b0258bde6628a3de723520a66fb0b31f1ea5bf45b693f868d47c2d89692920e2898ccd89710c42227d31293d9dad740791453ec8ebfb26047ccca53e0a200e9112f345f5559f8ded2f193feedd8c1db6bd0fbfa5441aa773dd5c4a60defe92e1b7d79182af16472872ab3c222bdd2b5f941604b7de582b08ce3f6635d83f66e9b84e6fe9d3eafa166f9e62a4cdc993d42ed8c0ad5713205a9fc7e5bc87b2feeaffe05167a27b04975e9366fa254adf511ffd7d07bc1f5075d70b2a7db06f2224692566fb5e8890c6e39038787873f21c52ce14e1e70e60b8fca716feb5d0727ac1c355cf633226c993ca2f16b95c59b3cc31ac7f641335d80ff1ad3e672f88609ec5a4532986e0567e169094189dcc82d11d46bf73bc6c48a05f84982aa222b4c0e78b18cceb15345116e74f5fbc55d407ed9ba12559f57f37512998565a54fe77ea2a2224abbddea75a1b6da09ae3ac043b6161809b630174603f33195827d14d0ebd64c6e48e0d0346b469d664f89e2ef0e4c28b6a64acdd3a0edf8a61915a246feb25e8e69b3710916e494d5f482bf6ab65c675f73c39b2c2eecdca6709188c6f36b6331953e3f93e27c987a3743eaa71502c43a807d8f91cdc4dc33f48b852efdc8fcc2647f2e588ae368d69998348f0bfcfe6d65892aebb86351825c2aa45afc2e6869987849d70cec46ba951c864accfb8476d5643e7926942ddd8f0f32c296662ba659e999b0fb0bbfde7ba2834e5ec931d576e4333d6b5e8960e9de46d32daa5360ce3d0d6b864d3324401c4975485f1aef6ba618edb12d679b0e861fe5549249962d08d25dc2dde517b23cf9a76dcf482530c9a34762f97361dd95352de4c82263cfaa90796c2fa33dd5ce1d889a045d587ef18a5b940a2880e1c706541e2b523572a8836d513f6e688444af86e2ba9ad2ded540deadd9559eb56ac66fe021c3f88c2a1a484d62d602903793d10d</span>
+</code></pre></div></div>
+
+<p>Copie el <code class="language-plaintext highlighter-rouge">hash</code> y lo pegue en un archivo nuevo llamado <code class="language-plaintext highlighter-rouge">hashs</code> para hacerle fuerza bruta con <code class="language-plaintext highlighter-rouge">john the ripper</code>.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─[Fr4nzisko@RedTeam]─[/home/Fr4nzisko/Desktop]
+└──╼ john <span class="nt">--wordlist</span><span class="o">=</span>/usr/share/wordlists/rockyou.txt hashs
+Using default input encoding: UTF-8
+Loaded 1 password <span class="nb">hash</span> <span class="o">(</span>SSH <span class="o">[</span>RSA/DSA/EC/OPENSSH <span class="o">(</span>SSH private keys<span class="o">)</span> 32/64]<span class="o">)</span>
+Cost 1 <span class="o">(</span>KDF/cipher <span class="o">[</span><span class="nv">0</span><span class="o">=</span>MD5/AES <span class="nv">1</span><span class="o">=</span>MD5/3DES <span class="nv">2</span><span class="o">=</span>Bcrypt/AES]<span class="o">)</span> is 0 <span class="k">for </span>all loaded hashes
+Cost 2 <span class="o">(</span>iteration count<span class="o">)</span> is 1 <span class="k">for </span>all loaded hashes
+Will run 2 OpenMP threads
+Note: This format may emit <span class="nb">false </span>positives, so it will keep trying even after
+finding a possible candidate.
+Press <span class="s1">'q'</span> or Ctrl-C to abort, almost any other key <span class="k">for </span>status
+bloodninjas      <span class="o">(</span>id_rsa<span class="o">)</span>
+1g 0:00:00:05 DONE <span class="o">(</span>2021-07-12 16:10<span class="o">)</span> 0.1855g/s 2660Kp/s 2660Kc/s 2660KC/sie168..<span class="k">*</span>7¡Vamos!
+Session completed
+</code></pre></div></div>
+
+<p>Le di permisos <code class="language-plaintext highlighter-rouge">600</code> a la id_rsa y probe a autenticarme con el usuario <code class="language-plaintext highlighter-rouge">joanna</code> por SSH desde la máquina víctima y funciono.</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/125322013-922f0f80-e33d-11eb-9804-f85f1f2ae6b0.png" alt="id_rsa2 (1)" /></p>
+
+<p>Ya pude visualizar la <code class="language-plaintext highlighter-rouge">flag</code> del usuario, ahora solo faltaba la escalada de privilegios.</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/125322194-c9052580-e33d-11eb-96e0-3c2ca8a287d5.jpg" alt="user" /></p>
+
+<hr />
+
+<h1 align="center"><b>ESCALADA DE PRIVILEGIOS</b></h1>
+
+<p>Haciendo <code class="language-plaintext highlighter-rouge">sudo -l</code> como todos los usuarios me permitía ejecutar <code class="language-plaintext highlighter-rouge">nano</code> con <code class="language-plaintext highlighter-rouge">sudo</code> a un archivo llamado <code class="language-plaintext highlighter-rouge">priv</code>.</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/125322700-56487a00-e33e-11eb-894f-c374c5c7ad74.png" alt="priv" /></p>
+
+<p>Me dirigí a <a href="https://gftobins.github.io">gftobins</a> y encontré una manera de aprovecharme de <code class="language-plaintext highlighter-rouge">nano</code> para la escalada.</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/125322596-3dd85f80-e33e-11eb-86cd-c85a76726d85.png" alt="Captura de pantalla (655)" /></p>
+
+<p>Hice lo pasos que me pedía y consegui <code class="language-plaintext highlighter-rouge">root</code>.</p>
+
+<p><img src="https://user-images.githubusercontent.com/69093629/125322935-90b21700-e33e-11eb-9a0b-f3ff219cf2c0.png" alt="padentros" /></p>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#gobuster" class="page__taxonomy-item" rel="tag">gobuster</a><span class="sep">, </span>
+    
+      <a href="/tags/#linpeas" class="page__taxonomy-item" rel="tag">linpeas</a><span class="sep">, </span>
+    
+      <a href="/tags/#opennetadmin" class="page__taxonomy-item" rel="tag">OpenNetAdmin</a><span class="sep">, </span>
+    
+      <a href="/tags/#ssh2john" class="page__taxonomy-item" rel="tag">ssh2john</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#hackthebox" class="page__taxonomy-item" rel="tag">HackTheBox</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2021-07-12T00:00:00-04:00"></p>
+
+
+      </footer>
+
+      <section class="page__share">
+    
+      <h4 class="page__share-title">Share on</h4>
+    
+  
+    <a href="https://twitter.com/intent/tweet?text=OpenAdmin+-+HackTheBox%20http%3A%2F%2Flocalhost%3A4000%2Fhackthebox%2FOpenAdmin%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+  
+    <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fhackthebox%2FOpenAdmin%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+  
+    <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fhackthebox%2FOpenAdmin%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+  </section>
+  
+
+      
+  <nav class="pagination">
+    
+      <a href="#" class="pagination--pager disabled">Previous</a>
+    
+    
+      <a href="/hackthebox/Stacked/" class="pagination--pager" title="Stacked - HackTheBox
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+</div>
+
+    </div>
+
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+    <ul class="social-icons">
+      
+        <li><strong>Follow:</strong></li>
+      
+  
+      
+        
+          
+            <li><a href="https://twitter.com/Fr4nzisko1" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+          
+        
+          
+        
+          
+            <li><a href="https://github.com/Fr4nzisko" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+          
+        
+          
+        
+          
+            <li><a href="https://www.linkedin.com/in/jose-francisco-flores-/" rel="nofollow noopener noreferrer"><i class="fab fa-linkedin-in" aria-hidden="true"></i> Linkedin</a></li>
+          
+        
+      
+    </ul>
+  </div>
+  
+  <div class="page__footer-copyright">&copy; 2022 Fr4nzisko</div>
+  
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+
+
+
+    <script>
+    'use strict';
+  
+    (function() {
+      var commentContainer = document.querySelector('#utterances-comments');
+  
+      if (!commentContainer) {
+        return;
+      }
+  
+      var script = document.createElement('script');
+      script.setAttribute('src', 'https://utteranc.es/client.js');
+      script.setAttribute('repo', 'Fr4nzisko/fr4nzisko.github.io');
+      script.setAttribute('issue-term', 'pathname');
+      script.setAttribute('theme', 'github-light');
+      script.setAttribute('crossorigin', 'anonymous');
+  
+      commentContainer.appendChild(script);
+    })();
+  </script>
+  
+  
+
+
+
+
+
+  </body>
+</html>
