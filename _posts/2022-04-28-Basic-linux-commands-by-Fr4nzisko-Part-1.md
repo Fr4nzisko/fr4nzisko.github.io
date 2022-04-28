@@ -17,7 +17,7 @@ tags:
 ---
 
 <p align="center">
-<img src="https://img.freepik.com/foto-gratis/foto-monitor-pc-escritorio-funciones-variables-objetos-javascript-gerentes-proyecto-trabajan-nueva-idea-proceso-creacion-tecnologia-futura_372999-255.jpg"
+<img src="https://img.freepik.com/foto-gratis/foto-monitor-pc-escritorio-funciones-variables-objetos-javascript-gerentes-proyecto-trabajan-nueva-idea-proceso-creacion-tecnologia-futura_372999-255.jpg">
 </p>
 
 
