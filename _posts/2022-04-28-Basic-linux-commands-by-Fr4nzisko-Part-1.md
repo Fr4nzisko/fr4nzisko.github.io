@@ -1,5 +1,5 @@
 ---
-title: "Basic commands for the Linux terminal
+title: "Basic commands for the Linux terminal"
 layout: single
 excerpt: "Esta es la primera version de mis apuntes sobre la terminal de Linux."
 header:
