@@ -8,7 +8,7 @@ classes: wide
 header:
   teaser: "https://cdn-icons-png.flaticon.com/512/6124/6124995.png"
   teaser_home_page: true
-  icon: "https://user-images.githubusercontent.com/69093629/125662338-fd8b3b19-3a48-4fb0-b07c-86c047265082.png"
+  icon: "https://cdn-icons-png.flaticon.com/512/6124/6124995.png"
 categories:
   - Linux
 tags:
