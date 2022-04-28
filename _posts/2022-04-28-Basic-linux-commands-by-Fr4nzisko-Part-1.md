@@ -1,5 +1,5 @@
 ---
-title: "Basic commands for the Linux terminal"
+title: "Basic linux commands Part 1"
 layout: single
 excerpt: "Esta es la primera version de mis apuntes sobre la terminal de Linux."
 header:
@@ -20,7 +20,7 @@ tags:
 <img src="https://img.freepik.com/foto-gratis/foto-monitor-pc-escritorio-funciones-variables-objetos-javascript-gerentes-proyecto-trabajan-nueva-idea-proceso-creacion-tecnologia-futura_372999-255.jpg">
 </p>
 
-
+# Basic linux commands Part 1
 
 ## Basic concepts
 
