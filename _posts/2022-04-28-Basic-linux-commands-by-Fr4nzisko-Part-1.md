@@ -6,7 +6,7 @@ header:
 show_date: true
 classes: wide
 header:
-  teaser: "https://cdn-icons-png.flaticon.com/512/6124/6124995.png"
+  teaser: "https://img.freepik.com/foto-gratis/foto-monitor-pc-escritorio-funciones-variables-objetos-javascript-gerentes-proyecto-trabajan-nueva-idea-proceso-creacion-tecnologia-futura_372999-255.jpg"
   teaser_home_page: true
   icon: "https://cdn-icons-png.flaticon.com/512/6124/6124995.png"
 categories:
