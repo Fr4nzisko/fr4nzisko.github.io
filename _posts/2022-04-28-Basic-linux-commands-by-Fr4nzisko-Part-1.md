@@ -1,4 +1,21 @@
-# Basic commands for the Linux terminal
+title: "Basic commands for the Linux terminal
+layout: single
+excerpt: "Esta es la primera version de mis apuntes sobre la terminal de Linux."
+header:
+show_date: true
+classes: wide
+header:
+  teaser: "https://cdn-icons-png.flaticon.com/512/6124/6124995.png"
+  teaser_home_page: true
+  icon: "https://cdn-icons-png.flaticon.com/512/6124/6124995.png"
+categories:
+  - Linux
+tags:
+  - cd
+  - pwd
+
+
+
 
 
 
